@@ -9,12 +9,13 @@ import {
 let styles = StyleSheet.create({
     header : {
         backgroundColor: '#ff6f00',
-        height: 64
+        height: 44
     },
 
     title:{
-        lineHeight : 60,
-        textAlign:'center'
+        top:24,
+        textAlign:'center',
+        color: 'white'
     }
 })
 class Header extends Component {

@@ -66,10 +66,6 @@ class Tabs extends Component {
         this.moveToActiveTab(idx);
     }
 
-    onScroll(evt){
-        console.log(evt.nativeEvent);
-       //this.scrollPosX = evt.nativeEvent.
-    }
     moveToActiveTab(idx){
 
         let {width,left,right} =  this.tabsLayouts[idx];
@@ -125,8 +121,6 @@ class Tabs extends Component {
                 ref={(scrollView) => { this._scrollView = scrollView; }}
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
-                scrollEventThrottle={200}
-                onScroll = {this.onScroll.bind(this)}
                 onLayout={this.measureTabContainer.bind(this)}   >
                    
                     {tabs.map((item, idx) => {

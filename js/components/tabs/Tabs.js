@@ -46,8 +46,9 @@ let styles = StyleSheet.create({
         color: '#ff6f00'
     },
 
-     moreBtnBox: {
+    moreBtnBox: {
         position: 'absolute',
+        backgroundColor: 'white',
         right: 0,
         top: 0,
         height: 45,
@@ -68,7 +69,12 @@ let styles = StyleSheet.create({
 
     itemContainer: {
         position: 'absolute',
-        top: 45
+        backgroundColor: 'white',
+        top: 45,
+        left: 0,
+        right:0,
+        borderBottomWidth :35,
+        borderColor :'white'
     },
     itemGroup: {
         flexDirection: 'row',
@@ -201,9 +207,9 @@ class Tabs extends Component {
     }
 
     render() {
-        let {activeIdx, tabs} = this.props;
+        let {activeIdx, tabs,tabStyle} = this.props;
         return (
-            <View style={styles.bar} >
+            <View style={[styles.bar,tabStyle]}>
                 <ScrollView style={styles.tabs}
                     ref={(scrollView) => { this._scrollView = scrollView; } }
                     horizontal={true}

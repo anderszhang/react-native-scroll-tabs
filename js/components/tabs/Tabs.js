@@ -40,9 +40,15 @@ let styles = StyleSheet.create({
         color: '#ff6f00'
     },
 
+     moreBtnBox: {
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        height: 45,
+        width: 45
+    },
     moreBtn: {
         position: 'absolute',
-        alignItems: 'center',
         right: 12,
         top: 18
     },
@@ -210,8 +216,11 @@ class Tabs extends Component {
                 </ScrollView>
                 <View style={styles.line}></View>
                 <TouchableWithoutFeedback onPress={this.onPressMoreBtn.bind(this)}>
-                    <Image style={styles.moreBtn}
+                    <View style={styles.moreBtnBox}>
+                        <Image style={styles.moreBtn}
                         source={this.state.itemContainerVisalbe ? require('../../../images/menu-expland.png') : require('../../../images/menu-close.png')}></Image>
+                    </View>
+                   
                 </TouchableWithoutFeedback>
                 {this.renderItemGroup(tabs, activeIdx)}
             </View>

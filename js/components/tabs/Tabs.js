@@ -141,6 +141,12 @@ class Tabs extends Component {
         this.itemViewWidth = (width - 15) / 4 - 15;
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.activeIdx != this.props.activeIdx){
+            this.moveToActiveTab(this.props.activeIdx);
+        }
+    }
+    
 
     onPressTab(idx) {
         let {onTabClick} = this.props;

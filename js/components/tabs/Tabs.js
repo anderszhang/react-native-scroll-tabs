@@ -5,7 +5,7 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
+    TouchableWithoutFeedback,
     Dimensions
 } from 'react-native';
 
@@ -52,7 +52,10 @@ class Tabs extends Component {
         super(props);
         this.tabsLayouts ={};
         this.tabsLength = 0;
+        //滚动条位置
         this.scrollPosX = 0;
+        //屏幕内Tab的游边界
+        this.tabRightEdgeInScreen = 0;
         console.log("WINDOW_WIDTH"+WINDOW_WIDTH);
     }
 
@@ -63,6 +66,10 @@ class Tabs extends Component {
         this.moveToActiveTab(idx);
     }
 
+    onScroll(evt){
+        console.log(evt.nativeEvent);
+       //this.scrollPosX = evt.nativeEvent.
+    }
     moveToActiveTab(idx){
 
         let {width,left,right} =  this.tabsLayouts[idx];
@@ -75,25 +82,20 @@ class Tabs extends Component {
             newX = left - halfWidth + width/2 ;
             //Tab超出滚动区域的长度
             let outContainerLength = this.tabsLength - right;
-            //如果右侧tab剩余的长度已经不满足半屏
+            //如果右侧tab剩余的长度已经不满足半屏,经剩余的tab显示在屏幕中即可,
+            //滚动条位置=tab总长度-屏幕外的长度
             if(outContainerLength < halfWidth){
-                //newX = this.tabContainerWidth - outContainerLength - width;
-                //newX = newX - outContainerLength - width;
                 newX =  this.tabsLength - this.tabContainerWidth;
             }
-
-            //如果在一屏中,不需将其居中显示
-            //if(newX - this.scrollPosX > halfWidth || this.scrollPosX ==0){
-                 this.scrollPosX = newX;
-                 this._scrollView.scrollTo({x:newX,y:0,animated:false})
-            //}
-           
+            this.scrollPosX = newX;
+            this._scrollView.scrollTo({x:newX,y:0,animated:false})
         }
         //在左侧的tab
-        if(left < 0){
-            newX = left + halfWidth;
+        if(left < this.tabRightEdgeInScreen && this.scrollPosX > 0){
+            newX = 0;
+            this.scrollPosX = newX;
+            this._scrollView.scrollTo({x:newX,y:0,animated:false})
         }
-        //console.log(tabRight);
     }
 
     measureTabContainer(evt){
@@ -104,11 +106,12 @@ class Tabs extends Component {
 
     measureTab(idx,evt){
         const { x, width, height, } = evt.nativeEvent.layout;
-        // if(idx>1){
-        //     let preRight = this.tabsLayouts[idx-1].right;
-        // }
-        //console.log(evt.nativeEvent.layout);
-        this.tabsLayouts[idx] = {left:x,right:x+width,width,height};
+        let right = x+width;
+        this.tabsLayouts[idx] = {left:x,right,width,height};
+        //计算首屏显示的tab的外编辑
+        if(x<this.tabContainerWidth && right >this.tabContainerWidth){
+            this.tabRightEdgeInScreen = x;
+        }
         if(idx == this.props.tabs.length-1){
             this.tabsLength = x + width;
         }
@@ -122,16 +125,18 @@ class Tabs extends Component {
                 ref={(scrollView) => { this._scrollView = scrollView; }}
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
+                scrollEventThrottle={200}
+                onScroll = {this.onScroll.bind(this)}
                 onLayout={this.measureTabContainer.bind(this)}   >
                    
                     {tabs.map((item, idx) => {
                         return (
-                            <TouchableOpacity onPress={this.onPressTab.bind(this,idx)} key={item.name} onLayout={this.measureTab.bind(this,idx)} >
+                            <TouchableWithoutFeedback onPress={this.onPressTab.bind(this,idx)} key={item.name} onLayout={this.measureTab.bind(this,idx)} >
                                 <View>
                                     <Text style={[styles.tab, activeIdx==idx ? styles.activeTab : '']}>{item.name}</Text>
                                     <View style={activeIdx==idx ? styles.activeTabLine:''}></View>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableWithoutFeedback>
 
                         )
                     })}

@@ -13,9 +13,19 @@ import Tabs from '../components/tabs/Tabs';
 import ViewPager from '../components/viewPager/ViewPager';
 
 const style = StyleSheet.create({
-    tabStyle:{
-        position:'absolute',
-        top:64
+    tabStyle: {
+        position: 'absolute',
+        top: 64
+    },
+    textStyle: {
+        bottom: 50,
+        left:0,
+        right:0,
+        position: 'absolute',
+        color: 'red',
+        textAlign: 'center',
+        fontSize:30
+        
     }
 });
 
@@ -29,11 +39,11 @@ class Home extends Component {
         this.setState({ tabIdx: idx });
     }
 
-    _onPageScroll(){
+    _onPageScroll() {
 
     }
 
-    _onPageSelected(info){
+    _onPageSelected(info) {
         this.onTabClick(info.position);
     }
 
@@ -48,14 +58,14 @@ class Home extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <Header title={'标题'} />
-                <ViewPager style={{marginTop:45}}
-                    initialPage = {this.state.tabIdx}
+                <ViewPager style={{ marginTop: 45 }}
+                    initialPage={this.state.tabIdx}
                     onPageScroll={this._onPageScroll.bind(this)}
                     onPageSelected={this._onPageSelected.bind(this)}>
-                    {tabs.map((tab,idx)=>{
-                        return(
-                            <View style={{backgroundColor:'blue'}} key={tab.name}>
-                                <Text>{tab.name}</Text>
+                    {tabs.map((tab, idx) => {
+                        return (
+                            <View style={{ backgroundColor: 'blue' }} key={tab.name} >
+                                <Text style={style.textStyle}>{tab.name}</Text>
                             </View>
                         )
                     })}

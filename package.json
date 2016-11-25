@@ -1,11 +1,17 @@
 {
-  "name": "liveshow",
+  "name": "react-native-scroll-tabs",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
+  "keywords": [
+    "scroll tabs",
+    "react native",
+    "viewPager",
+    "scroll tab bar"
+  ],
   "dependencies": {
     "react": "15.3.2",
     "react-native": "0.37.0"

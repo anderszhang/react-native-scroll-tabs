@@ -1,3 +1,9 @@
+/*
+ * Scroll Tabs
+ * @Author: zhangshubin 
+ * @Date: 2016-11-26 04:59:58 
+ */
+
 import React, { Component } from 'react';
 
 import {

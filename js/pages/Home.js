@@ -32,7 +32,7 @@ class Home extends Component {
         ];
         return (
             <View style={{ flex: 1, height: 44 }}>
-                <Header title={'健康直播'} />
+                <Header title={'标题'} />
                 <Tabs activeIdx={this.state.tabIdx} tabs={tabs} onTabClick={this.onTabClick.bind(this)} />
             </View>
         );

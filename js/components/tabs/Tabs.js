@@ -9,7 +9,6 @@ import {
     Dimensions
 } from 'react-native';
 
-const WINDOW_WIDTH = Dimensions.get('window').width;
 let styles = StyleSheet.create({
 
     bar: {
@@ -51,12 +50,15 @@ class Tabs extends Component {
     constructor(props) {
         super(props);
         this.tabsLayouts ={};
-        this.tabsLength = 0;
-        //滚动条位置
-        this.scrollPosX = 0;
-        //屏幕内Tab的游边界
-        this.tabRightEdgeInScreen = 0;
-        console.log("WINDOW_WIDTH"+WINDOW_WIDTH);
+        //Tab项总长
+        this.tabsWidth = 0;
+        //Tab显示区域宽度
+        this.tabsViewportWidth = 0;
+        //Tab显示区左边界
+        this.tabsViewportLeftPosX = 0;
+        //Tab显示区右边界
+        this.tabsViewportRightPosX = 0;
+
     }
 
     onPressTab(idx,evt){
@@ -67,49 +69,48 @@ class Tabs extends Component {
     }
 
     moveToActiveTab(idx){
-
         let {width,left,right} =  this.tabsLayouts[idx];
-        let newX = 0;
-        //偏移值
-        let halfWidth = this.tabContainerWidth/2;
-        //如果选择的Tab在屏幕右侧
-        if(right > this.tabContainerWidth){
-            //默认屏幕右侧的选择tab,移动至屏幕正中
-            newX = left - halfWidth + width/2 ;
-            //Tab超出滚动区域的长度
-            let outContainerLength = this.tabsLength - right;
-            //如果右侧tab剩余的长度已经不满足半屏,经剩余的tab显示在屏幕中即可,
-            //滚动条位置=tab总长度-屏幕外的长度
-            if(outContainerLength < halfWidth){
-                newX =  this.tabsLength - this.tabContainerWidth;
+        //如果选择的Tab在屏幕之外,需要重新设定滚动条位置
+        if(left < this.tabsViewportLeftPosX || right > this.tabsViewportRightPosX ){
+            let newX = 0;
+            //半屏宽度值
+            let halfWidth = this.tabsViewportWidth/2;
+            //right < this.tabsViewportWidth 表明选择Tab在首屏
+            //left < this.tabsViewportLeftPosX 表明在左侧未显示全
+            //对首屏,在左侧未显示全的Tab,滚动条X坐标设0,即可显示全
+            if(left < this.tabsViewportLeftPosX && right < this.tabsViewportWidth){
+                newX = 0;
+            }else{
+                //其他在屏幕外的选择tab,移动至屏幕正中即可
+                newX = left - halfWidth + width/2 ;
+                //Tab超出滚动区域的长度
+                let outContainerLength = this.tabsWidth - right;
+                //如果右侧tab剩余的长度已经不满足半屏,经剩余的tab显示在屏幕中即可,
+                //滚动条位置=tab总长度-tab显示宽度
+                if(outContainerLength < halfWidth){
+                    newX =  this.tabsWidth - this.tabsViewportWidth;
+                }
             }
-            this.scrollPosX = newX;
-            this._scrollView.scrollTo({x:newX,y:0,animated:false})
-        }
-        //在左侧的tab
-        if(left < this.tabRightEdgeInScreen && this.scrollPosX > 0){
-            newX = 0;
-            this.scrollPosX = newX;
+
+            this.tabsViewportLeftPosX = newX;
+            this.tabsViewportRightPosX = this.tabsViewportLeftPosX + this.tabsViewportWidth;
             this._scrollView.scrollTo({x:newX,y:0,animated:false})
         }
     }
 
     measureTabContainer(evt){
         const { width} = evt.nativeEvent.layout;
-        this.tabContainerWidth = width;
-        //console.log(this.tabContainerWidth);
+        this.tabsViewportWidth = width;
+        this.tabsViewportLeftPosX = 0;
+        this.tabsViewportRightPosX = this.tabsViewportLeftPosX + this.tabsViewportWidth;
     }
 
     measureTab(idx,evt){
         const { x, width, height, } = evt.nativeEvent.layout;
         let right = x+width;
         this.tabsLayouts[idx] = {left:x,right,width,height};
-        //计算首屏显示的tab的外编辑
-        if(x<this.tabContainerWidth && right >this.tabContainerWidth){
-            this.tabRightEdgeInScreen = x;
-        }
         if(idx == this.props.tabs.length-1){
-            this.tabsLength = x + width;
+            this.tabsWidth = right;
         }
     }
     

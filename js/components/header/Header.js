@@ -9,11 +9,11 @@ import {
 let styles = StyleSheet.create({
     header : {
         backgroundColor: '#ff6f00',
-        height: 44
+        height: 64
     },
 
     title:{
-        top:24,
+        top:34,
         textAlign:'center',
         color: 'white'
     }

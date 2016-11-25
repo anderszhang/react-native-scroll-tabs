@@ -14,7 +14,7 @@ import Tabs from '../components/tabs/Tabs';
 class Home extends Component {
 
     state = {
-        tabIdx: 1
+        tabIdx: 0
     }
 
     onTabClick(idx) {
